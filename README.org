@@ -1,7 +1,10 @@
 
 * =rubberstamp= fetches licenses for your project
 
-Here's how I use it
+=rubberstamp= fetches license texts from https://choosealicense.com and prints
+them to =stdout=.
+
+Here's how I use it:
 
 #+begin_src 
 
@@ -53,8 +56,8 @@ $ ./rubberstamp.ros gpl-3.0 > /path/to/my/project/LICENSE
 
 #+end_src
 
-** To-Do
 
-*** Add more licenses
 
-    =rubberstamp= fetches license texts from https://choosealicense.com
+
+
+
