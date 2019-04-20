@@ -1,0 +1,47 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp(ql:quickload '(drakma plump) :silent t)
+  )
+
+(defpackage :ros.script.rubberstamp.3764711734
+  (:use :cl))
+(in-package :ros.script.rubberstamp.3764711734)
+
+(defvar *licenses*
+  '("gpl-3.0"
+    "mit"
+    "agpl-3.0"
+    "lgpl-3.0"
+    "mpl-2.0"
+    "apache-2.0"
+    "unlicense"))
+
+
+(defun get-license (name)
+  (handler-case
+      (let* ((url (format nil "https://choosealicense.com/licenses/~a/" name))
+             (html (drakma:http-request url))
+             (dom (plump:parse html)))
+        (plump:text (plump:get-element-by-id dom "license-text")))
+    (error (e) (format *error-output* "~%ERROR: ~a~%" e))))
+
+(defun help-message ()
+  (format t "~%~{~a~^~%~}" (list "USAGE: rubberstamp LICENSE"
+                                 ""
+                                 "LICENSE is one of:"))
+  (format t "~%~{                   ~a~%~}~%~%"  *licenses*))
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (cond ((zerop (length argv)) (help-message))
+        ((find (car argv) *licenses* :test #'equalp)
+         (format t "~a~%" (get-license (car argv))))
+        (t (help-message))))
+
+
+;;; vim: set ft=lisp lisp:
