@@ -85,7 +85,6 @@ exec ros -Q -- $0 "$@"
   (let* ((license (find-license name))
          (params (mapcar #'cons (cdr license) args))
          (license-text license-text))
-    (format t "~s~%" params)
     (dolist (pair params)
       (setf license-text (ppcre:regex-replace-all (param-key-to-regex (car pair))
                                                   license-text
