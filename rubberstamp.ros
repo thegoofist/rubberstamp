@@ -5,7 +5,7 @@ exec ros -Q -- $0 "$@"
 |#
 (progn ;;init forms
   (ros:ensure-asdf)
-  #+quicklisp(ql:quickload '(drakma plump) :silent t)
+  #+quicklisp(ql:quickload '(drakma plump cl-ppcre) :silent t)
   )
 
 (defpackage :ros.script.rubberstamp.3764711734
@@ -14,41 +14,41 @@ exec ros -Q -- $0 "$@"
 
 (defvar *licenses*
   '(
-    "0bsd"
-    "afl-3.0"
-    "agpl-3.0"
-    "apache-2.0"
-    "artistic-2.0"
-    "bsd-2-clause"
-    "bsd-3-clause"
-    "bsd-3-clause-clear"
-    "bsl-1.0"
-    "cc-by-4.0"
-    "cc-by-sa-4.0"
-    "cc0-1.0"
-    "ecl-2.0"
-    "epl-1.0"
-    "epl-2.0"
-    "eupl-1.1"
-    "eupl-1.2"
-    "gpl-2.0"
-    "gpl-3.0"
-    "isc"
-    "lgpl-2.1"
-    "lgpl-3.0"
-    "lppl-1.3c"
-    "mit"
-    "mpl-2.0"
-    "ms-pl"
-    "ms-rl"
-    "ncsa"
-    "ofl-1.1"
-    "osl-3.0"
-    "postgresql"
-    "unlicense"
-    "upl-1.0"
-    "wtfpl"
-    "zlib"
+    ("0bsd" :year :fullname)
+    ("afl-3.0")
+    ("agpl-3.0")
+    ("apache-2.0" :yyyy :name)   ; actual param is "name of copyright owner"
+    ("artistic-2.0")
+    ("bsd-2-clause" :year :fullname)
+    ("bsd-3-clause" :year :fullname)
+    ("bsd-3-clause-clear" :year :fullname)
+    ("bsl-1.0")
+    ("cc-by-4.0")
+    ("cc-by-sa-4.0")
+    ("cc0-1.0")
+    ("ecl-2.0" :yyyy :name)
+    ("epl-1.0")
+    ("epl-2.0")
+    ("eupl-1.1")
+    ("eupl-1.2")
+    ("gpl-2.0")
+    ("gpl-3.0")
+    ("isc" :year :fullname)
+    ("lgpl-2.1")
+    ("lgpl-3.0")
+    ("lppl-1.3c")
+    ("mit" :year :fullname)
+    ("mpl-2.0")
+    ("ms-pl")
+    ("ms-rl")
+    ("ncsa" :year :fullame :project :projecturl)
+    ("ofl-1.1" :year :fullname :email)
+    ("osl-3.0")
+    ("postgresql" :year :fullname)
+    ("unlicense")
+    ("upl-1.0" :year :fullname)
+    ("wtfpl")
+    ("zlib" :year :fullname)
     ))
 
 
@@ -60,17 +60,44 @@ exec ros -Q -- $0 "$@"
         (plump:text (plump:get-element-by-id dom "license-text")))
     (error (e) (format *error-output* "~%ERROR: ~a~%" e))))
 
+
+(defun spaces (n)
+  (with-output-to-string (s)
+    (dotimes (x n) (princ #\Space s))))
+
 (defun help-message ()
-  (format t "~%~{~a~^~%~}" (list "USAGE: rubberstamp LICENSE"
+  (format t "~%~{~a~^~%~}~%~%" (list "USAGE: rubberstamp LICENSE"
                                  ""
                                  "LICENSE is one of:"))
-  (format t "~%~{~a~%~}~%~%"  *licenses*))
+  (dolist (lc *licenses*)
+    (format t "~a~a~{[~a] ~}~%"
+            (car lc)
+            (spaces (- 20 (length (car lc))))
+            (cdr lc))))
+
+(defun find-license (name)
+  (find name *licenses* :test #'equal :key #'car))
+
+(defun param-key-to-regex (key)
+  (format nil "\\[~a[a-z ]*\\]" (string-downcase (symbol-name key))))
+
+(defun format-license (name args license-text)
+  (let* ((license (find-license name))
+         (params (mapcar #'cons (cdr license) args))
+         (license-text license-text))
+    (format t "~s~%" params)
+    (dolist (pair params)
+      (setf license-text (ppcre:regex-replace-all (param-key-to-regex (car pair))
+                                                  license-text
+                                                  (cdr pair))))
+    license-text))
+
 
 (defun main (&rest argv)
   (declare (ignorable argv))
   (cond ((zerop (length argv)) (help-message))
-        ((find (car argv) *licenses* :test #'equalp)
-         (format t "~a~%" (get-license (car argv))))
+        ((find-license (car argv))
+         (format t (format-license (car argv) (cdr argv) (get-license (car argv)))))
         (t (help-message))))
 
 
