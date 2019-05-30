@@ -14,49 +14,66 @@ $ ./rubberstamp.ros
 USAGE: rubberstamp LICENSE
 
 LICENSE is one of:
-                   0bsd
-                   afl-3.0
-                   agpl-3.0
-                   apache-2.0
-                   artistic-2.0
-                   bsd-2-clause
-                   bsd-3-clause
-                   bsd-3-clause-clear
-                   bsl-1.0
-                   cc-by-4.0
-                   cc-by-sa-4.0
-                   cc0-1.0
-                   ecl-2.0
-                   epl-1.0
-                   epl-2.0
-                   eupl-1.1
-                   eupl-1.2
-                   gpl-2.0
-                   gpl-3.0
-                   ics
-                   lgpl-2.1
-                   lgpl-3.0
-                   lppl-1.3c
-                   mit
-                   mpl-2.0
-                   ms-pl
-                   ms-rl
-                   ncsa
-                   ofl-1.1
-                   osl-3.0
-                   postgresql
-                   unlicense
-                   upl-1.0
-                   wtfpl
-                   zlib
 
+0bsd                [YEAR] [FULLNAME] 
+afl-3.0             
+agpl-3.0            
+apache-2.0          [YYYY] [NAME] 
+artistic-2.0        
+bsd-2-clause        [YEAR] [FULLNAME] 
+bsd-3-clause        [YEAR] [FULLNAME] 
+bsd-3-clause-clear  [YEAR] [FULLNAME] 
+bsl-1.0             
+cc-by-4.0           
+cc-by-sa-4.0        
+cc0-1.0             
+ecl-2.0             [YYYY] [NAME] 
+epl-1.0             
+epl-2.0             
+eupl-1.1            
+eupl-1.2            
+gpl-2.0             
+gpl-3.0             
+isc                 [YEAR] [FULLNAME] 
+lgpl-2.1            
+lgpl-3.0            
+lppl-1.3c           
+mit                 [YEAR] [FULLNAME] 
+mpl-2.0             
+ms-pl               
+ms-rl               
+ncsa                [YEAR] [FULLAME] [PROJECT] [PROJECTURL] 
+ofl-1.1             [YEAR] [FULLNAME] [EMAIL] 
+osl-3.0             
+postgresql          [YEAR] [FULLNAME] 
+unlicense           
+upl-1.0             [YEAR] [FULLNAME] 
+wtfpl               
+zlib                [YEAR] [FULLNAME] 
 
 $ # fetch a license and redirect to where you want it
 $ ./rubberstamp.ros gpl-3.0 > /path/to/my/project/LICENSE
 
+
+$ # Or fetch a license with parameters
+$ ./rubberstamp.ros 0bsd 2019 "Zoobas-r-Us Limited"
+
+Copyright (c) 2019 Zubas-r-Us Limited
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
 #+end_src
 
-
+I usually `ros build rubberstamp.ros` and install it to `~/.local/bin`.
 
 
 
